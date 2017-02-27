@@ -1,0 +1,10 @@
+[Unit]
+Description=Aptly apt archive service
+
+[Service]
+ExecStart=/home/neonarchives/bin/aptly api serve -listen localhost:9090
+WorkingDirectory=/home/neonarchives
+Restart=always
+
+[Install]
+WantedBy=default.target

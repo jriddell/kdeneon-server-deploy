@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# get the latest
+sudo cp aptly.list /etc/apt/sources.list.d/
+sudo apt update
+sudo apt install aptly
+sudo cp /usr/bin/aptly .
+
+# deploy
+ansible all -i hosts -m file -a "src=aptly.service dest=.config/systemd/user/aptly.service"
+ansible all -i hosts -m file -a "src=aptly dest=bin/"
+ansible all -i hosts -m shell -a "systemctl --user daemon-reload"
+ansible all -i hosts -m shell -a "systemctl --user start aptly.service"
+
+# verify it works
+ansible all -i hosts -m shell -a "GET http://localhost:9090/api/publish"
